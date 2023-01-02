@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Autosalon - objednávka</title>
+    <script language="JavaScript">
+      // ***********************************
+      // fce Vypocti cenu START
+      // ***********************************
+      function VypoctiCenu() {
+        const CelkovaCenaVozu = document.querySelector("#CelkovaCenaVozu");
+        const StavNabídky = document.querySelector("#StavNabídky");
+
+        let CenaAuta = Number(document.form1.VyberZnacky.value);
+        let ZakaznikovaCenaAuta = Number(document.form1.NabizenaCena.value);
+        let CelkovaCenaAuta;
+        let CenaVybavy = 0;
+
+        console.log(CenaAuta);
+        let CenaBarvy;
+        if (document.form1.Barva[0].checked == true) {
+          CenaBarvy = 0;
+        } else if (document.form1.Barva[1].checked == true) {
+          CenaBarvy = VypoctiCenuBarvy(5, CenaAuta);
+        } else if (document.form1.Barva[2].checked == true) {
+          CenaBarvy = VypoctiCenuBarvy(7, CenaAuta);
+        }
+        console.log(CenaBarvy);
+        CelkovaCenaAuta = CenaAuta + CenaBarvy;
+        console.log(CelkovaCenaAuta);
+
+        const chVybava = document.querySelectorAll(".Vybava");
+
+        for (let i = 0; i < chVybava.length; i++) {
+          if (chVybava[i].checked == true) {
+            if (i == 3) {
+              CenaVybavy =
+                CenaVybavy + VypoctiCenuVybavy(chVybava[i].value, CenaAuta);
+            } else {
+              CenaVybavy = CenaVybavy + Number(chVybava[i].value);
+            }
+          }
+        }
+        console.log(CenaVybavy);
+
+        CelkovaCenaAuta = Number(CelkovaCenaAuta + CenaVybavy);
+
+        // zaverecny vystup ceny
+        CelkovaCenaVozu.textContent = CelkovaCenaAuta + " Kč";
+
+        console.log(CelkovaCenaAuta);
+        console.log(`-----------------`);
+        console.log(ZakaznikovaCenaAuta);
+
+        if (ZakaznikovaCenaAuta >= CelkovaCenaAuta) {
+          StavNabídky.textContent = "Vaše nabídka je pro nás akceptovatelná.";
+        } else if (ZakaznikovaCenaAuta == 0) {
+          StavNabídky.textContent = "Nezadal jste Vaši nabídku.";
+        } else {
+          StavNabídky.textContent = "To je boužel málo.";
+        }
+      }
+      // ***********************************
+      // fce Vypocti cenu KONEC
+      // fce VypoctiCenuBarvy START
+      // ***********************************
+      function VypoctiCenuBarvy(procentniCast, CenaAuta) {
+        let cena = 15;
+        cena = (Number(procentniCast) / 100) * Number(CenaAuta);
+        return Math.round(cena);
+      }
+      // ***********************************
+      // fce VypoctiCenuBarvy KONEC
+      // fce VypoctiCenuVybavy START
+      // ***********************************
+      function VypoctiCenuVybavy(procentniCast, CenaAuta) {
+        let cenaVybavy = 0;
+        cenaVybavy = (Number(procentniCast) / 100) * Number(CenaAuta);
+        return Math.round(cenaVybavy);
+      }
+      // ***********************************
+      // fce VypoctiCenuVybavy KONEC
+      // ***********************************
+
+      function kontrola(adresa) {
+        if (adresa.indexOf("@") < 1) {
+          alert("neplatny email");
+          pokracuj = false;
+        } else {
+          alert("email byl odeslan");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <form name="form1">
+      <h1>Objednávka automobilu</h1>
+      <fieldset>
+        <legend><b>VÝBĚR VOZU A VÝBAVY</b></legend>
+        <br />
+        <label> <b>Výběr značky vozu se základními cenami</b> </label>
+        <br />
+        <select name="VyberZnacky" id="">
+          <option value="1500000">Mercedes 1 500 000 Kč</option>
+          <option value="1200000">Volvo 1 200 000 Kč</option>
+          <option value="1350000">Audi 1 350 000 Kč</option>
+          <option value="1400000">BMW 1 400 000 Kč</option>
+        </select>
+        <br /><br />
+        <label><b>Výběr barvy</b></label>
+        <br />
+        <input type="radio" name="Barva" id="" checked />Základní barva (bez
+        příplatku)
+        <br />
+        <input type="radio" name="Barva" id="" />Pálený lak (s příplatkem 5% ze
+        základní ceny vozu)
+        <br />
+        <input type="radio" name="Barva" id="" />Metalická barva (s příplatkem
+        7% ze základní ceny vozu)
+        <br />
+
+        <br /><br />
+        <label><b>Dodatečná výbava automobilu</b></label>
+        <br />
+        <input
+          type="checkbox"
+          name="Vybava1"
+          class="Vybava"
+          id=""
+          value="10000"
+        />Parkovací kamery (+10 000 Kč)
+        <br />
+        <input
+          type="checkbox"
+          name="Vybava2"
+          class="Vybava"
+          id=""
+          value="20000"
+        />Litá kola (+20 000 Kč)
+        <br />
+        <input
+          type="checkbox"
+          name="Vybava3"
+          class="Vybava"
+          id=""
+          value="50000"
+        />Kožené sedačky (+ 50 000 Kč)
+        <br />
+        <input
+          type="checkbox"
+          name="Vybava4"
+          class="Vybava"
+          id=""
+          value="20"
+        />Tuningová úprava (+20 % ze základní ceny vozu) <br /><br />
+      </fieldset>
+      <br />
+      <fieldset>
+        <legend><b>CENA</b></legend>
+        <br />
+        <div
+          id="CelkovaCenaVozu"
+          style="font-size: 20px; color: green; font-weight: bold"
+        ></div>
+        <br />
+        <label>Vámi nabízena cena: </label
+        ><input type="number" name="NabizenaCena" id="" /> <br /><br />
+        <!-- <label>Vaše nabídka nám: </label
+        ><input type="text" name="StavNabídky" id="" /> -->
+        <div id="StavNabídky"></div>
+        <br />
+        <input
+          type="button"
+          name="VypocitejCenu"
+          id="VypocitejCenu"
+          value="Vypočítej cenu"
+          onclick="VypoctiCenu()"
+        />
+        <br />
+      </fieldset>
+      <br />
+      <fieldset>
+        <legend><b>OBJEDNÁVKA</b></legend>
+        <br />
+        <label>Vaše emailná odresa *: </label>
+        <input type="email" name="email" id="" />
+
+        <br /><br />
+        <input
+          type="button"
+          name="Objednat"
+          onclick="kontrola(email.value)"
+          value="Odeslat objednávku"
+        />
+        <br /><br />
+        * povinná položka bez které nedojde k odeslání objednávky
+      </fieldset>
+    </form>
+    <!-- <script src="script.js"></script> -->
+  </body>
+</html>
